@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Electrician Pro Portal</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        section { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+        input, textarea { width: 100%; margin: 10px 0; padding: 8px; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>Electrician Business Portal</h2>
+
+    <section id="admin-panel">
+        <h3>Admin: Upload New Work</h3>
+        <form id="adminForm">
+            <input type="hidden" name="type" value="admin">
+            <input type="text" name="jobTitle" placeholder="Job Title (e.g. Panel Upgrade)" required>
+            <textarea name="description" placeholder="Describe the work done"></textarea>
+            <input type="text" name="imageUrl" placeholder="Image Link (Host on Imgur or similar)">
+            <button type="submit">Post to Website</button>
+        </form>
+    </section>
+
+    <hr>
+
+    <section id="customer-panel">
+        <h3>Customer: Request Service</h3>
+        <form id="customerForm">
+            <input type="hidden" name="type" value="customer">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="How can I help you?"></textarea>
+            <button type="submit">Send Request</button>
+        </form>
+    </section>
+
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzA4E9h7dwQBpZs9NUDHosFMSdLsswOj0-SWqTU8DovXr1WXdhyOXlSBPZDxzLm_p3o/exec';
+
+        function handleForm(formId) {
+            const form = document.getElementById(formId);
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                fetch(WEB_APP_URL, { 
+                    method: 'POST', 
+                    body: new FormData(form) 
+                })
+                .then(res => alert('Submitted successfully to Sheet!'))
+                .catch(err => alert('Error: ' + err.message));
+            });
+        }
+
+        handleForm('adminForm');
+        handleForm('customerForm');
+    </script>
+</body>
+</html>
