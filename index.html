@@ -38,23 +38,33 @@
     </section>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzA4E9h7dwQBpZs9NUDHosFMSdLsswOj0-SWqTU8DovXr1WXdhyOXlSBPZDxzLm_p3o/exec';
+      function attachForm(id) {
+    document.getElementById(id).onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button');
+        btn.innerText = "Sending...";
 
-        function handleForm(formId) {
-            const form = document.getElementById(formId);
-            form.addEventListener('submit', e => {
-                e.preventDefault();
-                fetch(WEB_APP_URL, { 
-                    method: 'POST', 
-                    body: new FormData(form) 
-                })
-                .then(res => alert('Submitted successfully to Sheet!'))
-                .catch(err => alert('Error: ' + err.message));
+        // Convert form data to a URL-encoded string
+        const formData = new FormData(e.target);
+        const params = new URLSearchParams(formData);
+
+        try {
+            await fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                mode: 'no-cors', // This bypasses strict CORS errors
+                body: params
             });
+            alert("Success! Data sent to Sheet.");
+            e.target.reset();
+        } catch (err) {
+            console.error(err);
+            alert("Error connecting to Google Sheets.");
+        } finally {
+            btn.innerText = "Submit";
         }
-
-        handleForm('adminForm');
-        handleForm('customerForm');
+    };
+}
     </script>
 </body>
+
 </html>
